@@ -42,11 +42,12 @@ Knowledge.new.ask 1
 
 set_trace_func nil
 
-if diag[0][:message] == :ask
-  puts 'output the ask'
-else
-  raise diag.inspect
+def assert(value, expected = true)
+  if value == expected
+    puts '.'
+  else
+    raise "#{value} != #{expected}"
+  end
 end
-  #   ['knowledge(ask)',
-  #                          ['Question(initialize)'],
-  #                          'question(well_formed)']
+
+assert diag[0][:message], :ask
