@@ -32,7 +32,7 @@ self:       #{ binding.eval('self') }
 
 OUT
 
-  diag << {:message => method}
+  diag << {:message => method, :receiver => binding.eval('self')}
   end
 end
 
@@ -43,11 +43,13 @@ Knowledge.new.ask 1
 set_trace_func nil
 
 def assert(value, expected = true)
-  if value == expected
+  if expected == value || ( expected.respond_to?(:match) && expected.match(value) )
     puts '.'
   else
-    raise "#{value} != #{expected}"
+    raise "#{ value.inspect } != #{ expected.inspect }"
   end
 end
 
 assert diag[0][:message], :ask
+assert diag[0][:sender], nil
+assert diag[0][:receiver].inspect, /#\<Knowledge:.+>/
