@@ -38,7 +38,7 @@ end
 
 set_trace_func tracer
 
-puts Knowledge.new.ask 1
+Knowledge.new.ask 1
 
 set_trace_func nil
 
