@@ -1,55 +1,77 @@
 require 'pp'
 
 class Knowledge
-
   def ask string
     q = Question.new "?"
     ! q.well_formed?
   end
-
 end
 
 class Question
-
   def initialize string
   end
 
   def well_formed?
   end
-
 end
 
-diag = []
+expected_output = <<SEQUML
+t->knowledge: ask (1)
+knowledge->question: initialize (?)
+question->knowledge:
+knowledge->question: well_formed? ()
+question->knowledge:
+knowledge->t:
+SEQUML
 
-tracer = Proc.new do |event, file, line, method, binding, class_name|
-  if %w[ call return ].include? event
-  puts <<-OUT
-event:      #{ event }
-line:       #{ line }
-method:     #{ method }
-class_name: #{ class_name }
-self:       #{ binding.eval('self') }
+class Gotero
+  attr_accessor :output
 
-OUT
+  def initialize
+    @output = ''
+    @emiters = [:t]
+  end
 
-  diag << {:message => method, :receiver => binding.eval('self')}
+  def tracer
+    @trace ||= TracePoint.new(:call, :return) do |tp|
+      self.output += "#{formatter(tp)}\n"
+    end
+  end
+
+  def trace &block
+    tracer.enable &block
+  end
+
+  def formatter tracepoint
+    case tracepoint.event
+    when :call
+      current_emiter = @emiters.last
+      receiver = tracepoint.defined_class
+      subject = receiver.name.downcase
+      @emiters << subject.to_sym
+      method = tracepoint.method_id
+      detached_method = receiver.instance_method(method)
+      arguments = detached_method.parameters.map do |param|
+        tracepoint.binding.local_variable_get param[1]
+      end.join(', ')
+      message_details = " #{ method } (#{ arguments })"
+    when :return
+      current_emiter = @emiters.pop
+      subject = @emiters.last
+    else
+      raise
+    end
+    "#{ current_emiter }->#{ subject }:#{ message_details }"
   end
 end
 
-set_trace_func tracer
+gotero = Gotero.new
 
-Knowledge.new.ask 1
-
-set_trace_func nil
-
-def assert(value, expected = true)
-  if expected == value || ( expected.respond_to?(:match) && expected.match(value) )
-    puts '.'
-  else
-    raise "#{ value.inspect } != #{ expected.inspect }"
-  end
+gotero.trace do 
+  Knowledge.new.ask 1
 end
 
-assert diag[0][:message], :ask
-assert diag[0][:sender], nil
-assert diag[0][:receiver].inspect, /#\<Knowledge:.+>/
+# assert_equal expected_output.lines.size, gotero.output.lines.size
+expected_output.lines.zip(gotero.output.lines).each do |expected, actual|
+  assert_equal actual, expected
+end
