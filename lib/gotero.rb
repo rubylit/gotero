@@ -56,7 +56,7 @@ class Gotero
   def on_call tracepoint
     current_emiter = @emiters.last
     receiver = tracepoint.defined_class
-    subject = receiver.name.downcase
+    subject = module_name receiver
     method = tracepoint.method_id
     detached_method = receiver.instance_method(method)
     arguments = detached_method.parameters.map do |param|
@@ -65,6 +65,17 @@ class Gotero
     message_details = " #{ method } (#{ arguments })"
     self.output << "#{ current_emiter }->#{ subject }:#{ message_details }\n"
     @emiters << subject.to_sym
+  end
+
+  # El nombre de la clase que recive lo podemos sacar usando el método `name` de
+  # `Module`, pero cuando las clases son abstractas no hay un nombre y name es
+  # nil.
+  def module_name module_object
+    if module_object.name
+      module_object.name.downcase
+    else
+      module_object.to_s
+    end
   end
 
   # En el caso del return el receptor es el que está pen-último en la pila, así
