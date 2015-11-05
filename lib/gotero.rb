@@ -60,7 +60,7 @@ class Gotero
     method = tracepoint.method_id
     detached_method = receiver.instance_method(method)
     arguments = detached_method.parameters.map do |param|
-      tracepoint.binding.local_variable_get param[1]
+      tracepoint.binding.local_variable_get(param[1]).inspect
     end.join(', ')
     message_details = " #{ method } (#{ arguments })"
     self.output << "#{ current_emiter }->#{ subject }:#{ message_details }\n"

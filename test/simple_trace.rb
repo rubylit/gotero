@@ -2,7 +2,7 @@ require_relative '../lib/gotero'
 
 class Knowledge
   def ask string
-    q = Question.new "?"
+    q = Question.new "una pregunta?"
     ! q.well_formed?
   end
 end
@@ -17,7 +17,7 @@ end
 
 expected_output = <<SEQUML
 t->knowledge: ask (1)
-knowledge->question: initialize (?)
+knowledge->question: initialize ("una pregunta?")
 question->knowledge:
 knowledge->question: well_formed? ()
 question->knowledge:
