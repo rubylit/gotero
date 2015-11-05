@@ -156,11 +156,11 @@ llamando y, ya que estamos, los argumentos con los que se llama al método.</p>
             <div class="content"><div class='highlight'><pre>  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">on_call</span> <span class="hljs-title">tracepoint</span></span>
     current_emiter = <span class="hljs-variable">@emiters</span>.last
     receiver = tracepoint.defined_class
-    subject = receiver.name.downcase
+    subject = module_name receiver
     method = tracepoint.method_id
     detached_method = receiver.instance_method(method)
     arguments = detached_method.parameters.map <span class="hljs-keyword">do</span> |param|
-      tracepoint.binding.local_variable_get param[<span class="hljs-number">1</span>]
+      tracepoint.binding.local_variable_get(param[<span class="hljs-number">1</span>]).inspect
     <span class="hljs-keyword">end</span>.join(<span class="hljs-string">', '</span>)
     message_details = <span class="hljs-string">" <span class="hljs-subst">#{ method }</span> (<span class="hljs-subst">#{ arguments }</span>)"</span>
     <span class="hljs-keyword">self</span>.output &lt;&lt; <span class="hljs-string">"<span class="hljs-subst">#{ current_emiter }</span>-&gt;<span class="hljs-subst">#{ subject }</span>:<span class="hljs-subst">#{ message_details }</span>\n"</span>
@@ -175,6 +175,29 @@ llamando y, ya que estamos, los argumentos con los que se llama al método.</p>
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
+              <p>El nombre de la clase que recive lo podemos sacar usando el método <code>name</code> de
+<code>Module</code>, pero cuando las clases son abstractas no hay un nombre y name es
+nil.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">module_name</span> <span class="hljs-title">module_object</span></span>
+    <span class="hljs-keyword">if</span> module_object.name
+      module_object.name.downcase
+    <span class="hljs-keyword">else</span>
+      module_object.to_s
+    <span class="hljs-keyword">end</span>
+  <span class="hljs-keyword">end</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-9">&#182;</a>
               </div>
               <p>En el caso del return el receptor es el que está pen-último en la pila, así
 que lo que hacemos es sacar el último de la pila (y dejarlo como emisor) y
