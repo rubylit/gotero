@@ -27,47 +27,165 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-1">&#182;</a>
               </div>
-              
+              <p>La principal funcion de gotero es ofrecer al usuario comprensión sobre los
+llamados realizados por la aplicación para ententer la interacción entre los
+objetos.</p>
+<p>Para hacerlo la idea es ejecutar un bloque de código con un gotero, el cual
+pone luego a disposición un diagrama de secuencias.</p>
+<p>Entonces lo primero va a ser definir una clase Gotero</p>
+
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Gotero</span></span>
-  <span class="hljs-keyword">attr_accessor</span> <span class="hljs-symbol">:output</span>
+            <div class="content"><div class='highlight'><pre>
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Gotero</span></span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-2">&#182;</a>
+              </div>
+              <p>Por el momento, vamos a guardar el resultado como un string y lo vamos a
+hacer accesible, después vamos a ver como podemos guardar esta información
+de una forma más adaptada a nuestras necesidades.</p>
 
-  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">initialize</span></span>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">attr_accessor</span> <span class="hljs-symbol">:output</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-3">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              <p>Inicialmente la secuencia va a estar vacía y nuestro primer objeto va a ser
+un sujeto <code>:t</code> (ya que se me ocurre que esto lo estamos corriendo como un
+test)</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">initialize</span></span>
     <span class="hljs-variable">@output</span> = <span class="hljs-string">''</span>
     <span class="hljs-variable">@emiters</span> = [<span class="hljs-symbol">:t</span>]
-  <span class="hljs-keyword">end</span>
+  <span class="hljs-keyword">end</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-4">&#182;</a>
+              </div>
+              <p>La interface publica de gotero simplemente recibe un bloque y lo ejecuta con
+el gotero habilitado</p>
 
-  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">tracer</span></span>
-    <span class="hljs-variable">@trace</span> ||= <span class="hljs-constant">TracePoint</span>.new(<span class="hljs-symbol">:call</span>, <span class="hljs-symbol">:return</span>) <span class="hljs-keyword">do</span> |tp|
-      <span class="hljs-keyword">self</span>.output += <span class="hljs-string">"<span class="hljs-subst">#{formatter(tp)}</span>\n"</span>
-    <span class="hljs-keyword">end</span>
-  <span class="hljs-keyword">end</span>
-
-  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">trace</span> <span class="hljs-title">&amp;</span><span class="hljs-title">block</span></span>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">trace</span> <span class="hljs-title">&amp;</span><span class="hljs-title">block</span></span>
     tracer.enable &amp;block
-  <span class="hljs-keyword">end</span>
+  <span class="hljs-keyword">end</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-5">&#182;</a>
+              </div>
+              <p>Más allá de esa interface pública, el resto es privado</p>
 
-  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">formatter</span> <span class="hljs-title">tracepoint</span></span>
-    <span class="hljs-keyword">case</span> tracepoint.event
-    <span class="hljs-keyword">when</span> <span class="hljs-symbol">:call</span>
-      current_emiter = <span class="hljs-variable">@emiters</span>.last
-      receiver = tracepoint.defined_class
-      subject = receiver.name.downcase
-      <span class="hljs-variable">@emiters</span> &lt;&lt; subject.to_sym
-      method = tracepoint.method_id
-      detached_method = receiver.instance_method(method)
-      arguments = detached_method.parameters.map <span class="hljs-keyword">do</span> |param|
-        tracepoint.binding.local_variable_get param[<span class="hljs-number">1</span>]
-      <span class="hljs-keyword">end</span>.join(<span class="hljs-string">', '</span>)
-      message_details = <span class="hljs-string">" <span class="hljs-subst">#{ method }</span> (<span class="hljs-subst">#{ arguments }</span>)"</span>
-    <span class="hljs-keyword">when</span> <span class="hljs-symbol">:return</span>
-      current_emiter = <span class="hljs-variable">@emiters</span>.pop
-      subject = <span class="hljs-variable">@emiters</span>.last
-    <span class="hljs-keyword">else</span>
-      raise
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  private</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              <p>Para hacer el seguimiento, lo que vamos a usar es <code>TracePoint</code> al cual, si
+le pasamos un bloque ejecuta el bloque cada vez que un evento del tipo
+indicado se realiza.</p>
+<p>Los eventos que nos interesan son <code>call</code> y <code>return</code>, o sea llamados a
+métodos y retornos de métodos.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">tracer</span></span>
+    <span class="hljs-constant">TracePoint</span>.new(<span class="hljs-symbol">:call</span>, <span class="hljs-symbol">:return</span>) <span class="hljs-keyword">do</span> |tp|
+      <span class="hljs-keyword">case</span> tp.event
+      <span class="hljs-keyword">when</span> <span class="hljs-symbol">:call</span> <span class="hljs-keyword">then</span> on_call(tp)
+      <span class="hljs-keyword">when</span> <span class="hljs-symbol">:return</span> <span class="hljs-keyword">then</span> on_return(tp)
+      <span class="hljs-keyword">end</span>
     <span class="hljs-keyword">end</span>
-    <span class="hljs-string">"<span class="hljs-subst">#{ current_emiter }</span>-&gt;<span class="hljs-subst">#{ subject }</span>:<span class="hljs-subst">#{ message_details }</span>"</span>
+  <span class="hljs-keyword">end</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              <p>Cuando se hace un llamado a un método necesitamos saber quien lo llamó y
+quien es el receptor, para guardamos la pila de emisores, el receptor de un
+mensaje siempre es el emisor del siguiente mensaje, excepto en el caso en
+que un mensaje vuelva.</p>
+<p>Además de emisor y receptor, necesitamos saber el método que estamos
+llamando y, ya que estamos, los argumentos con los que se llama al método.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">on_call</span> <span class="hljs-title">tracepoint</span></span>
+    current_emiter = <span class="hljs-variable">@emiters</span>.last
+    receiver = tracepoint.defined_class
+    subject = receiver.name.downcase
+    method = tracepoint.method_id
+    detached_method = receiver.instance_method(method)
+    arguments = detached_method.parameters.map <span class="hljs-keyword">do</span> |param|
+      tracepoint.binding.local_variable_get param[<span class="hljs-number">1</span>]
+    <span class="hljs-keyword">end</span>.join(<span class="hljs-string">', '</span>)
+    message_details = <span class="hljs-string">" <span class="hljs-subst">#{ method }</span> (<span class="hljs-subst">#{ arguments }</span>)"</span>
+    <span class="hljs-keyword">self</span>.output &lt;&lt; <span class="hljs-string">"<span class="hljs-subst">#{ current_emiter }</span>-&gt;<span class="hljs-subst">#{ subject }</span>:<span class="hljs-subst">#{ message_details }</span>\n"</span>
+    <span class="hljs-variable">@emiters</span> &lt;&lt; subject.to_sym
+  <span class="hljs-keyword">end</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
+              <p>En el caso del return el receptor es el que está pen-último en la pila, así
+que lo que hacemos es sacar el último de la pila (y dejarlo como emisor) y
+tomar como receptor al que queda último.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">on_return</span> <span class="hljs-title">tracepoint</span></span>
+    emiter = <span class="hljs-variable">@emiters</span>.pop
+    receiver = <span class="hljs-variable">@emiters</span>.last
+    <span class="hljs-keyword">self</span>.output &lt;&lt; <span class="hljs-string">"<span class="hljs-subst">#{ emiter }</span>-&gt;<span class="hljs-subst">#{ receiver }</span>:\n"</span>
   <span class="hljs-keyword">end</span>
 <span class="hljs-keyword">end</span></pre></div></div>
             
