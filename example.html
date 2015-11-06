@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Sequence diagrams</title>
+    <script src="bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="bower_components/raphael/raphael-min.js"></script>
+    <script src="bower_components/underscore/underscore-min.js"></script>
+    <script src="bower_components/js-sequence-diagrams/build/sequence-diagram-min.js"></script>
+  </head>
+  <body>
+    <h2>empty model is ok</h2>
+    <div class="diagram">t->kernel: test ("empty model is ok", [])
+kernel->kernel: cutest ()
+kernel->kernel:
+kernel->kernel: cutest ()
+kernel->kernel:
+kernel->kernel: prepare (nil)
+kernel->kernel: cutest ()
+kernel->kernel:
+kernel->kernel:
+kernel->[]: redis ()
+[]->kernel:
+kernel->redic: call (["FLUSHALL"])
+redic->redic__client: connect ()
+redic__client->redic__client: connected? ()
+redic__client->redic__client:
+redic__client->redic__client: write (["FLUSHALL"])
+redic__client->redic__client:
+redic__client->redic__client: read ()
+redic__client->hiredis__ext__connection: read ()
+hiredis__ext__connection->redic__client:
+redic__client->redic__client:
+redic__client->redic:
+redic->kernel:
+kernel->kernel: setup (nil)
+kernel->kernel: cutest ()
+kernel->kernel:
+kernel->kernel:
+kernel->[]: create ({})
+[]->ohm__model: initialize ({})
+ohm__model->ohm__model: update_attributes ({})
+ohm__model->ohm__model:
+ohm__model->[]:
+[]->ohm__model: save ()
+ohm__model->ohm__model: model ()
+ohm__model->ohm__model:
+ohm__model->[]: indices ()
+[]->ohm__model:
+ohm__model->ohm__model: model ()
+ohm__model->ohm__model:
+ohm__model->[]: uniques ()
+[]->ohm__model:
+ohm__model->ohm__model: model ()
+ohm__model->ohm__model:
+ohm__model->ohm__model: _sanitized_attributes ()
+ohm__model->ohm__model: model ()
+ohm__model->ohm__model:
+ohm__model->[]: attributes ()
+[]->ohm__model:
+ohm__model->ohm__model:
+ohm__model->ohm__model: script ("/home/eloyesp/projects/ohm/lib/ohm/lua/save.lua", [0, "\x81\xA4name\xA3Foo", "\x90", "\x80", "\x80"])
+ohm__model->ohm__model: redis ()
+ohm__model->ohm__model: model ()
+ohm__model->ohm__model:
+ohm__model->[]: redis ()
+[]->[]: redis ()
+[]->[]:
+[]->ohm__model:
+ohm__model->ohm__model:
+ohm__model->ohm__model: redis ()
+ohm__model->ohm__model: model ()
+ohm__model->ohm__model:
+ohm__model->[]: redis ()
+[]->[]: redis ()
+[]->[]:
+[]->ohm__model:
+ohm__model->ohm__model:
+ohm__model->redic: call! (["EVALSHA", "d84093efbb10df1c5995c6b0e7340520973b306d", 0, "\x81\xA4name\xA3Foo", "\x90", "\x80", "\x80"])
+redic->redic: call (["EVALSHA", "d84093efbb10df1c5995c6b0e7340520973b306d", 0, "\x81\xA4name\xA3Foo", "\x90", "\x80", "\x80"])
+redic->redic__client: connect ()
+redic__client->redic__client: connected? ()
+redic__client->redic__client:
+redic__client->redic__client: write (["EVALSHA", "d84093efbb10df1c5995c6b0e7340520973b306d", 0, "\x81\xA4name\xA3Foo", "\x90", "\x80", "\x80"])
+redic__client->redic__client:
+redic__client->redic__client: read ()
+redic__client->hiredis__ext__connection: read ()
+hiredis__ext__connection->redic__client:
+redic__client->redic__client:
+redic__client->redic:
+redic->redic:
+redic->ohm__model:
+ohm__model->ohm__model:
+ohm__model->[]:
+[]->kernel:
+kernel->kernel: cutest ()
+kernel->kernel:
+kernel->t:
+</div>    <script>$(".diagram").sequenceDiagram({theme: 'simple'});</script>
+  </body>
+</html>
