@@ -8,17 +8,12 @@
 # Entonces lo primero va a ser definir una clase Gotero
 
 class Gotero
-  
-  # Por el momento, vamos a guardar el resultado como un string y lo vamos a
-  # hacer accesible, después vamos a ver como podemos guardar esta información
-  # de una forma más adaptada a nuestras necesidades.
-  attr_accessor :output
 
   # Inicialmente la secuencia va a estar vacía y nuestro primer objeto va a ser
   # un sujeto `:t` (ya que se me ocurre que esto lo estamos corriendo como un
   # test)
   def initialize
-    @output = ''
+    @messages = []
     @emiters = [:t]
   end
 
@@ -26,6 +21,12 @@ class Gotero
   # el gotero habilitado
   def trace &block
     tracer.enable &block
+  end
+
+  # Para construir la secuencia, unimos los mensajes en orden. Agrego un salto
+  # de linea al final para que sea más fácil de leer.
+  def output
+    @messages.join("\n") << "\n"
   end
 
   # Más allá de esa interface pública, el resto es privado
@@ -63,7 +64,7 @@ class Gotero
       tracepoint.binding.local_variable_get(param[1]).inspect
     end.join(', ')
     message_details = " #{ method } (#{ arguments })"
-    self.output << "#{ current_emiter }->#{ subject }:#{ message_details }\n"
+    @messages << "#{ current_emiter }->#{ subject }:#{ message_details }"
     @emiters << subject.to_sym
   end
 
@@ -84,6 +85,6 @@ class Gotero
   def on_return tracepoint
     emiter = @emiters.pop
     receiver = @emiters.last
-    self.output << "#{ emiter }->#{ receiver }:\n"
+    @messages << "#{ emiter }->#{ receiver }:"
   end
 end
