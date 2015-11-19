@@ -18,10 +18,10 @@ end
 expected_output = <<SEQUML
 t->knowledge: ask (1)
 knowledge->question: initialize ("una pregunta?")
-question->knowledge:
+question-->knowledge:
 knowledge->question: well_formed? ()
-question->knowledge:
-knowledge->t:
+question-->knowledge:
+knowledge-->t:
 SEQUML
 
 gotero = Gotero.new

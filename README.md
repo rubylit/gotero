@@ -16,7 +16,7 @@ end
 
 puts g.output
 #=> t->your_object: method (arguments)
-#=> your_object->t:
+#=> your_object-->t:
 ~~~
 
 The output aims to be compatible with [js-sequence-diagrams][1] so they can be

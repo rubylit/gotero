@@ -85,6 +85,6 @@ class Gotero
   def on_return tracepoint
     emiter = @emiters.pop
     receiver = @emiters.last
-    @messages << "#{ emiter }->#{ receiver }:"
+    @messages << "#{ emiter }-->#{ receiver }:"
   end
 end
