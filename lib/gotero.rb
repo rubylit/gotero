@@ -14,7 +14,7 @@ class Gotero
   # test)
   def initialize
     @messages = []
-    @emiters = [:t]
+    @emiters = ['t']
   end
 
   # La interface publica de gotero simplemente recibe un bloque y lo ejecuta con
@@ -57,7 +57,7 @@ class Gotero
   def on_call tracepoint
     current_emiter = @emiters.last
     receiver = tracepoint.defined_class
-    subject = module_name receiver
+    subject = quote(module_name(receiver))
     method = tracepoint.method_id
     detached_method = receiver.instance_method(method)
     arguments = detached_method.parameters.map do |param|
@@ -86,5 +86,15 @@ class Gotero
     emiter = @emiters.pop
     receiver = @emiters.last
     @messages << "#{ emiter }-->#{ receiver }:"
+  end
+
+  # Como las clases pueden tener algun que otro caracter molesto, si eso pasa
+  # lo ponemos entre comillas
+  def quote module_name
+    if module_name =~ /[\->:,"]/
+      %Q["#{ module_name}"]
+    else
+      module_name
+    end
   end
 end
