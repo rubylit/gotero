@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name        = 'gotero'
-  s.version     = '0.1.0'
+  s.version     = '0.2.0'
   s.licenses    = ['AGPL-3.0+']
   s.summary     = 'Sequence diagrams from runtime.'
   s.description = 'Use a tracer to build a sequence diagram of a block of code.'
