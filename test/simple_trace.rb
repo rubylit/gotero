@@ -30,6 +30,4 @@ gotero.trace do
   Knowledge.new.ask 1
 end
 
-expected_output.lines.zip(gotero.output.lines).each do |expected, actual|
-  assert_equal actual, expected
-end
+assert_equal expected_output, gotero.output

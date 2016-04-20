@@ -8,5 +8,8 @@ Gem::Specification.new do |s|
   s.email       = 'rubylitar@gmail.com'
   s.files       = ['lib/gotero.rb']
   s.homepage    = 'https://github.com/rubylit/gotero'
+
+  s.add_development_dependency 'differ'
 end
+
 
