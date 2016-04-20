@@ -1,0 +1,5 @@
+#!/bin/bash
+
+set -e
+
+cutest -r ./test/helper.rb test/*.rb
